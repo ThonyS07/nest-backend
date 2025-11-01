@@ -1,4 +1,4 @@
-import { Controller, NotFoundException, Get, Post, Delete, Body, Param, Put, BadRequestException } from '@nestjs/common';
+import { Controller, NotFoundException, Get, Post, Delete, Body, Param, Put, UnprocessableEntityException, ForbiddenException } from '@nestjs/common';
 
 interface User {
   id: string;
@@ -29,6 +29,9 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
+    if (user.id === '1') {
+      throw new ForbiddenException(`User is forbidden`);
+    }
     return user;
   }
   @Post()
@@ -55,7 +58,7 @@ export class UsersController {
     const email = body?.email;
     const isValidEmail = email && email.includes('@');
     if (!isValidEmail) {
-      throw new BadRequestException(`Email ${email} is not valid`); // or throw new BadRequestException(`Email ${email} is not valid`);
+      throw new UnprocessableEntityException(`Email ${email} is not valid`); // or throw new BadRequestException(`Email ${email} is not valid`);
     }
     const existingUser = this.users[index];
     const updatedUser = { ...existingUser, ...body };
