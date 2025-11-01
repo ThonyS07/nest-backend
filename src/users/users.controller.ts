@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common';
+import { Controller, NotFoundException, Get, Post, Delete, Body, Param, Put, BadRequestException } from '@nestjs/common';
 
 interface User {
   id: string;
@@ -27,8 +27,39 @@ export class UsersController {
   getUserById(@Param('id') id: string) {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      throw new HttpException('User with id ' + id + ' not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
+  }
+  @Post()
+  createUser(@Body() body: User) {
+    const newUser = { ...body, id: `${new Date().getTime()}` };
+    this.users.push(newUser);
+    return newUser;
+  }
+  @Delete(':id')
+  deleteUser(@Param('id') id: string) {
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    this.users.splice(index, 1);
+    return { message: `User with ID ${id} deleted successfully` };
+  }
+  @Put(':id')
+  updateUser(@Param('id') id: string, @Body() body: User) {
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    const email = body?.email;
+    const isValidEmail = email && email.includes('@');
+    if (!isValidEmail) {
+      throw new BadRequestException(`Email ${email} is not valid`); // or throw new BadRequestException(`Email ${email} is not valid`);
+    }
+    const existingUser = this.users[index];
+    const updatedUser = { ...existingUser, ...body };
+    this.users[index] = updatedUser;
+    return updatedUser;
   }
 }
