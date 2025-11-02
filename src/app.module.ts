@@ -1,9 +1,29 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ENV } from './commons/interfaces/env.interface';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), UsersModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService<ENV>) => ({
+        type: 'postgres',
+        host: configService.get('POSTGRES_HOST', { infer: true }),
+        port: configService.get('POSTGRES_PORT', { infer: true }),
+        username: configService.get('POSTGRES_USERNAME', { infer: true }),
+        password: configService.get('POSTGRES_PASSWORD', { infer: true }),
+        database: configService.get('POSTGRES_DB', { infer: true }),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
+    UsersModule,
+  ],
 })
 export class AppModule {}
