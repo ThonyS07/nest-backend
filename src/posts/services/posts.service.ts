@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePostDto } from './dto/createPost.dto';
-import { UpdatePostDto } from './dto/updatePost.dto';
-import { Post } from './entities/post.entity';
+import { CreatePostDto } from '../dto/createPost.dto';
+import { UpdatePostDto } from '../dto/updatePost.dto';
+import { Post } from '../entities/post.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 

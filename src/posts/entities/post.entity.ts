@@ -1,5 +1,6 @@
 import { User } from '@/users/entities/users.entity';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Category } from './category.entity';
 
 @Entity({
   name: 'posts',
@@ -41,11 +42,6 @@ export class Post {
   })
   isDraft: boolean;
 
-  // @Column({
-  //   type: 'uuid',
-  // })
-  // authorId: string;
-
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',
@@ -66,4 +62,12 @@ export class Post {
   })
   @JoinColumn({ name: 'author_id' })
   user: User;
+
+  // @ManyToMany(() => Category, (category) => category.posts)
+  // @JoinTable({
+  //   name: 'posts_categories',
+  //   joinColumn: { name: 'post_id', referencedColumnName: 'id' },
+  //   inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
+  // })
+  // categories: Category[];
 }
