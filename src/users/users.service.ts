@@ -22,7 +22,10 @@ export class UsersService {
     }
     return user;
   }
-
+  async getUserProfile(id: string) {
+    const user = await this.findUserById(id);
+    return user.profile;
+  }
   async create(body: CreateUserDto) {
     try {
       const newUser = await this.usersRepository.save(body);
@@ -39,13 +42,18 @@ export class UsersService {
   }
 
   async update(id: string, changes: UpdateUserDto) {
-    const user = await this.findUserById(id);
-    const updatedUser = this.usersRepository.merge(user, changes);
-    return this.usersRepository.save(updatedUser);
+    try {
+      const user = await this.findUserById(id);
+      const updatedUser = this.usersRepository.merge(user, changes);
+      const savedUser = await this.usersRepository.save(updatedUser);
+      return savedUser;
+    } catch {
+      throw new BadRequestException('Error updating user');
+    }
   }
 
   private async findUserById(id: string): Promise<User> {
-    const user = await this.usersRepository.findOneBy({ id });
+    const user = await this.usersRepository.findOne({ where: { id }, relations: ['profile'] });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
