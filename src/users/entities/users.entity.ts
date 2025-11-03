@@ -1,5 +1,6 @@
 import { MaxLength, MinLength } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Profile } from './profile.entity';
 
 @Entity({
   name: 'users',
@@ -33,4 +34,11 @@ export class User {
     name: 'updated_at',
   })
   updatedAt: Date;
+
+  @OneToOne(() => Profile, {
+    nullable: false,
+    cascade: true,
+  })
+  @JoinColumn([{ name: 'profile_id' }])
+  profile: Profile;
 }
