@@ -1,3 +1,4 @@
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({
@@ -17,17 +18,22 @@ export class Post {
     type: 'varchar',
     length: 200,
     name: 'cover_image',
+    nullable: true,
   })
   coverImage: string;
+
   @Column({
     type: 'text',
-    name: 'summary',
+    nullable: true,
   })
   summary: string;
+
   @Column({
     type: 'text',
+    nullable: true,
   })
   content: string;
+
   @Column({
     type: 'boolean',
     default: true,
@@ -35,14 +41,22 @@ export class Post {
   })
   isDraft: boolean;
 
-  @Column({
-    type: 'uuid',
-  })
-  authorId: string;
+  // @Column({
+  //   type: 'uuid',
+  // })
+  // authorId: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   updatedAt: Date;
 }

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MinLength, MaxLength, ValidateNested, IsBoolean } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, MaxLength, ValidateNested, IsBoolean, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePostDto {
@@ -6,30 +6,31 @@ export class CreatePostDto {
   @IsNotEmpty()
   title: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(6)
-  @MaxLength(20)
-  authorId: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // @MinLength(6)
+  // @MaxLength(20)
+  // authorId: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(6)
   @MaxLength(20)
   coverImage: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(6)
   @MaxLength(20)
   summary: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(6)
   @MaxLength(20)
   content: string;
 
   @IsBoolean()
+  @IsOptional()
   isDraft: boolean;
 }
