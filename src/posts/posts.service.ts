@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/createPost.dto';
 import { UpdatePostDto } from './dto/updatePost.dto';
+import { Post } from './entities/post.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PostsService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  constructor(
+    @InjectRepository(Post)
+    private readonly postsRepository: Repository<Post>,
+  ) {}
+
+  async create(createPostDto: CreatePostDto): Promise<Post> {
+    try {
+      const newPost = await this.postsRepository.save(createPostDto);
+      return newPost;
+    } catch {
+      throw new BadRequestException('Error creating post');
+    }
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll(): Promise<Post[]> {
+    const posts = await this.postsRepository.find();
+    return posts;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string) {
+    const post = await this.postsRepository.findOne({ where: { id } });
+    if (!post) {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
+    return post;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+    try {
+      const post = await this.findOne(id);
+      if (!post) {
+        throw new NotFoundException(`Post with ID ${id} not found`);
+      }
+      const updatedPost = this.postsRepository.merge(post, updatePostDto);
+      const savedPost = await this.postsRepository.save(updatedPost);
+      return savedPost;
+    } catch {
+      throw new BadRequestException('Error updating post');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string): Promise<{ message: string }> {
+    try {
+      await this.postsRepository.delete({ id });
+      return { message: `Post ${id} deleted successfully` };
+    } catch {
+      throw new BadRequestException('Error deleting post');
+    }
   }
 }
