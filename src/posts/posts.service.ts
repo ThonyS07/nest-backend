@@ -12,22 +12,27 @@ export class PostsService {
     private readonly postsRepository: Repository<Post>,
   ) {}
 
-  async create(createPostDto: CreatePostDto): Promise<Post> {
+  async create(body: CreatePostDto): Promise<Post> {
     try {
-      const newPost = await this.postsRepository.save(createPostDto);
-      return newPost;
+      const newPost = await this.postsRepository.save({
+        ...body,
+        user: { id: body.userId },
+      });
+      return this.findOne(newPost.id);
     } catch {
       throw new BadRequestException('Error creating post');
     }
   }
 
   async findAll(): Promise<Post[]> {
-    const posts = await this.postsRepository.find();
+    const posts = await this.postsRepository.find({
+      relations: ['user.profile'],
+    });
     return posts;
   }
 
   async findOne(id: string) {
-    const post = await this.postsRepository.findOne({ where: { id } });
+    const post = await this.postsRepository.findOne({ where: { id }, relations: ['user.profile'] });
     if (!post) {
       throw new NotFoundException(`Post with ID ${id} not found`);
     }

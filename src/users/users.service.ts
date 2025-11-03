@@ -22,6 +22,10 @@ export class UsersService {
     }
     return user;
   }
+  async getUserPosts(id: string) {
+    const user = await this.findUserById(id);
+    return user.posts;
+  }
   async getUserProfile(id: string) {
     const user = await this.findUserById(id);
     return user.profile;
@@ -53,7 +57,7 @@ export class UsersService {
   }
 
   private async findUserById(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }, relations: ['profile'] });
+    const user = await this.usersRepository.findOne({ where: { id }, relations: ['profile', 'posts'] });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }

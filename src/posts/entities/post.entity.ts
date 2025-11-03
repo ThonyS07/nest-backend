@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { User } from '@/users/entities/users.entity';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity({
   name: 'posts',
@@ -59,4 +59,11 @@ export class Post {
     default: () => 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+
+  @ManyToOne(() => User, (user) => user.posts, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'author_id' })
+  user: User;
 }

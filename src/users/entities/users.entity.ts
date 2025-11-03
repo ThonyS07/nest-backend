@@ -1,6 +1,7 @@
 import { MaxLength, MinLength } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Profile } from './profile.entity';
+import { Post } from '@/posts/entities/post.entity';
 
 @Entity({
   name: 'users',
@@ -41,4 +42,7 @@ export class User {
   })
   @JoinColumn([{ name: 'profile_id' }])
   profile: Profile;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 }
