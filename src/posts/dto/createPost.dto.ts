@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MinLength, MaxLength, ValidateNested, IsBoolean, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, MaxLength, ValidateNested, IsBoolean, IsOptional, IsArray, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePostDto {
@@ -31,4 +31,9 @@ export class CreatePostDto {
   @IsBoolean()
   @IsOptional()
   isDraft: boolean;
+
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  categoryIds: string[];
 }

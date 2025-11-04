@@ -22,14 +22,17 @@ export class UsersService {
     }
     return user;
   }
-  async getUserPosts(id: string) {
-    const user = await this.findUserById(id);
-    return user.posts;
-  }
+
   async getUserProfile(id: string) {
     const user = await this.findUserById(id);
     return user.profile;
   }
+
+  async getUserPosts(id: string) {
+    const user = await this.findUserById(id);
+    return user.posts;
+  }
+
   async create(body: CreateUserDto) {
     try {
       const newUser = await this.usersRepository.save(body);
@@ -59,7 +62,7 @@ export class UsersService {
   private async findUserById(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id }, relations: ['profile', 'posts'] });
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User  ${id} not found`);
     }
     return user;
   }

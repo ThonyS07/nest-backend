@@ -63,11 +63,11 @@ export class Post {
   @JoinColumn({ name: 'author_id' })
   user: User;
 
-  // @ManyToMany(() => Category, (category) => category.posts)
-  // @JoinTable({
-  //   name: 'posts_categories',
-  //   joinColumn: { name: 'post_id', referencedColumnName: 'id' },
-  //   inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
-  // })
-  // categories: Category[];
+  @ManyToMany(() => Category, (category) => category.posts)
+  @JoinTable({
+    name: 'posts_categories',
+    joinColumn: { name: 'post_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
+  })
+  categories: Category[];
 }
