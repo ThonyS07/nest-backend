@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
-import dotenv from 'dotenv';
-dotenv.config();
+import { config } from 'dotenv';
+
+config();
 
 export default new DataSource({
   type: 'postgres',
