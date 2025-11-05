@@ -1,7 +1,7 @@
 import { MaxLength, MinLength } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Profile } from './profile.entity';
-import { Post } from '@/posts/entities/post.entity';
+import { Post } from '../../posts/entities/post.entity';
 
 @Entity({
   name: 'users',
