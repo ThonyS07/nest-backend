@@ -2,6 +2,7 @@ import { AppModule } from './app.module';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +21,13 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
+  app.use(helmet());
+
+  app.enableCors({
+    origin: '*',
+  });
+
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   const port = process.env.PORT ?? 3000;
 
