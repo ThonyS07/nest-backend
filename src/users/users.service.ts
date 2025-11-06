@@ -41,17 +41,21 @@ export class UsersService {
 
   async create(body: CreateUserDto) {
     try {
-      const newUser = await this.usersRepository.save(body);
-      return newUser;
+      const newUser = this.usersRepository.create(body);
+      const savedNewUser = await this.usersRepository.save(newUser);
+      return this.findOne(savedNewUser.id);
     } catch {
       throw new BadRequestException('Error creating user');
     }
   }
 
   async delete(id: string) {
-    const user = await this.findUserById(id);
-    await this.usersRepository.delete(user);
-    return { message: `User ${id} deleted successfully` };
+    try {
+      await this.usersRepository.delete(id);
+      return { message: `User ${id} deleted successfully` };
+    } catch {
+      throw new BadRequestException('Error deleting user');
+    }
   }
 
   async update(id: string, changes: UpdateUserDto) {
