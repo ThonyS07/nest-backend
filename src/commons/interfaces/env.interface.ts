@@ -6,4 +6,5 @@ export interface ENV {
   POSTGRES_DB: string;
   POSTGRES_USERNAME: string;
   POSTGRES_PASSWORD: string;
+  JWT_SECRET: string;
 }
