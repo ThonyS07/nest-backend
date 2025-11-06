@@ -6,10 +6,6 @@ export class CreatePostDto {
   title: string;
 
   @IsString()
-  @IsNotEmpty()
-  userId: string;
-
-  @IsString()
   @IsOptional()
   @MinLength(6)
   @MaxLength(20)

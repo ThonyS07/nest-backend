@@ -1,16 +1,21 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import * as express from 'express';
+
 import { PostsService } from '../services/posts.service';
 import { CreatePostDto } from '../dto/createPost.dto';
 import { UpdatePostDto } from '../dto/updatePost.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtPayload } from '@/commons/interfaces/jwtPayload.interface';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  create(@Body() createPostDto: CreatePostDto, @Req() req: express.Request) {
+    const user = req.user as JwtPayload;
+    const userId = user.sub;
+    return this.postsService.create(createPostDto, userId);
   }
 
   @Get()
