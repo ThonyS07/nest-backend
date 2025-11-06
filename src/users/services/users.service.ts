@@ -1,9 +1,9 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/createUsers.dto';
-import { UpdateUserDto } from './dto/updateUser.dto';
+import { CreateUserDto } from '../dto/createUsers.dto';
+import { UpdateUserDto } from '../dto/updateUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/users.entity';
+import { User } from '../entities/users.entity';
 
 @Injectable()
 export class UsersService {
@@ -67,6 +67,13 @@ export class UsersService {
     } catch {
       throw new BadRequestException('Error updating user');
     }
+  }
+
+  async getUserByEmail(email: string) {
+    const user = await this.usersRepository.findOne({
+      where: { email },
+    });
+    return user;
   }
 
   private async findUserById(id: string): Promise<User> {
