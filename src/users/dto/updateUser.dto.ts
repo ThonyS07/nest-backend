@@ -1,4 +1,4 @@
-import { PartialType, OmitType } from '@nestjs/mapped-types';
+import { PartialType, OmitType } from '@nestjs/swagger';
 import { CreateUserDto } from './createUsers.dto';
 import { UpdateProfileDto } from './updateProfile.dto';
 import { IsNotEmpty, ValidateNested } from 'class-validator';
